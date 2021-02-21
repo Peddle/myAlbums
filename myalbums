@@ -1,0 +1,23 @@
+#!/bin/bash
+
+cd /home/ultra/Music/shuffle #Change this directory to a folder containing the albums you want shuffled. CAUTION make sure your album names don't contain spaces as this can cause errors in shell script
+ALBUMS=($PWD/*)
+PLAYLIST=()
+
+function checkArray #checks if the playlist has all albums
+{
+ for item in ${PLAYLIST[@]}
+ do
+ [[ "$item" == "$1" ]] && return 0
+ done
+ return 1
+}
+
+while [ "${#PLAYLIST[@]}" -ne "${#ALBUMS[@]}" ] #shuffles albums into playlist
+
+do
+ rand=$[ $RANDOM % ${#ALBUMS[@]} ] 
+ checkArray "${ALBUMS[$rand]}" || PLAYLIST=(${PLAYLIST[@]} "${ALBUMS[$rand]}")
+done
+
+nvlc ${PLAYLIST[@]}; #starts nVLC with shuffled playlist
